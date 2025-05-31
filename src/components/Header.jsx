@@ -5,12 +5,12 @@ const Header = () => {
   return (
     <header className="dashboard-header">
       <div className="header-left">
-        <h1>إدارة التدفق النقدي الشخصي</h1>
+        <h1>Personal Expense Tracker</h1>
       </div>
       <div className="header-right">
         <div className="user-profile">
           <span>Mohamed Taha</span>
-          <div className="avatar">MA</div>
+          <div className="avatar">MO</div>
         </div>
       </div>
     </header>

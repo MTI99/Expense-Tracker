@@ -1,4 +1,3 @@
-// src/components/Dashboard.jsx
 import React, { useState, useEffect } from 'react';
 import StatsCard from './StatsCard';
 import ExpenseChart from './ExpenseChart';
@@ -7,78 +6,134 @@ import TransactionTable from './TransactionTable';
 import TransactionForm from './TransactionForm';
 import MonthFilter from './MonthFilter';
 import Header from './Header';
-import expenseData from '../data/expenseData';
+import { getCurrentData, getOrCreateMonth, updateData } from '../data/expenseData';
 
 const Dashboard = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [incomes, setIncomes] = useState([]);
-  const [expenses, setExpenses] = useState([]);
+  const [allMonths, setAllMonths] = useState([]);
+  const [currentMonth, setCurrentMonth] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
-  const [currentMonth, setCurrentMonth] = useState(expenseData.months[1]); // مايو 2025 افتراضيًا
-  const [allMonths] = useState(expenseData.months);
 
+  // Load data on component mount
   useEffect(() => {
-    // دمج الإيرادات والمصروفات
-    const allTransactions = [...currentMonth.incomes, ...currentMonth.expenses];
-    
-    // ترتيب المعاملات حسب التاريخ (من الأحدث إلى الأقدم)
-    const sortedTransactions = allTransactions.sort((a, b) => 
-      new Date(b.date) - new Date(a.date)
-    );
-    
-    setTransactions(sortedTransactions);
-    setIncomes(currentMonth.incomes);
-    setExpenses(currentMonth.expenses);
-  }, [currentMonth]);
+    const data = getCurrentData();
+    setAllMonths(data.months);
+    setCurrentMonth(data.months[data.months.length - 1]);
+  }, []);
 
-  // حساب الإحصائيات
+  // Update and save data helper
+  const updateAndSave = (updatedMonths) => {
+    updateData({ ...getCurrentData(), months: updatedMonths });
+    setAllMonths(updatedMonths);
+  };
+
+  // Get transactions for current month
+  const transactions = currentMonth 
+    ? [...currentMonth.incomes, ...currentMonth.expenses]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+    : [];
+
+  const incomes = currentMonth?.incomes || [];
+  const expenses = currentMonth?.expenses || [];
+
+  // Calculate stats
   const totalIncome = incomes.reduce((sum, income) => sum + income.amount, 0);
   const totalExpense = expenses.reduce((sum, expense) => sum + expense.amount, 0);
   const monthlyBalance = totalIncome - totalExpense;
-  const cashBalance = monthlyBalance - 1000; // قيمة تقديرية
+  const cashBalance = monthlyBalance - 1000;
 
-  // معالجة المعاملات
+  // Category expenses
+  const categoryExpenses = expenses.reduce((acc, expense) => {
+    const category = expense.category;
+    if (!acc[category]) acc[category] = 0;
+    acc[category] += expense.amount;
+    return acc;
+  }, {});
+
+  // Add transaction
   const handleAddTransaction = (newTransaction) => {
-    const updatedTransactions = [newTransaction, ...transactions];
-    setTransactions(updatedTransactions);
+    const transactionDate = new Date(newTransaction.date);
+    const targetMonth = getOrCreateMonth(transactionDate);
     
     if (newTransaction.type === 'income') {
-      setIncomes([...incomes, newTransaction]);
+      targetMonth.incomes.push(newTransaction);
     } else {
-      setExpenses([...expenses, newTransaction]);
+      targetMonth.expenses.push(newTransaction);
+    }
+    
+    const updatedMonths = [...getCurrentData().months];
+    updateAndSave(updatedMonths);
+    
+    if (currentMonth.name === targetMonth.name) {
+      setCurrentMonth({ ...targetMonth });
     }
     
     setShowForm(false);
     setEditingTransaction(null);
   };
 
+  // Edit transaction
   const handleEditTransaction = (updatedTransaction) => {
-    const updatedTransactions = transactions.map(transaction =>
-      transaction.id === updatedTransaction.id ? updatedTransaction : transaction
+    const transactionDate = new Date(updatedTransaction.date);
+    const targetMonth = getOrCreateMonth(transactionDate);
+    
+    const updatedMonths = [...allMonths];
+    const originalMonthIndex = updatedMonths.findIndex(m => 
+      m.incomes.some(t => t.id === updatedTransaction.id) || 
+      m.expenses.some(t => t.id === updatedTransaction.id)
     );
     
-    setTransactions(updatedTransactions);
-    
-    if (updatedTransaction.type === 'income') {
-      setIncomes(incomes.map(inc => 
-        inc.id === updatedTransaction.id ? updatedTransaction : inc
-      ));
-    } else {
-      setExpenses(expenses.map(exp => 
-        exp.id === updatedTransaction.id ? updatedTransaction : exp
-      ));
+    if (originalMonthIndex >= 0) {
+      const originalMonth = updatedMonths[originalMonthIndex];
+      
+      // Remove from original month
+      if (updatedTransaction.type === 'income') {
+        originalMonth.incomes = originalMonth.incomes.filter(t => t.id !== updatedTransaction.id);
+      } else {
+        originalMonth.expenses = originalMonth.expenses.filter(t => t.id !== updatedTransaction.id);
+      }
+      
+      // Add to target month
+      if (updatedTransaction.type === 'income') {
+        targetMonth.incomes.push(updatedTransaction);
+      } else {
+        targetMonth.expenses.push(updatedTransaction);
+      }
+      
+      updateAndSave(updatedMonths);
+      
+      // Update current month if needed
+      if (currentMonth.name === targetMonth.name || currentMonth.name === originalMonth.name) {
+        setCurrentMonth(
+          updatedMonths.find(m => m.name === currentMonth.name) || 
+          updatedMonths[updatedMonths.length - 1]
+        );
+      }
     }
     
     setShowForm(false);
     setEditingTransaction(null);
   };
 
+  // Delete transaction
   const handleDeleteTransaction = (id) => {
-    const updatedTransactions = transactions.filter(transaction => transaction.id !== id);
-    setTransactions(updatedTransactions);
-    setIncomes(incomes.filter(inc => inc.id !== id));
-    setExpenses(expenses.filter(exp => exp.id !== id));
+    const updatedMonths = [...allMonths];
+    const monthIndex = updatedMonths.findIndex(m => 
+      m.incomes.some(t => t.id === id) || 
+      m.expenses.some(t => t.id === id)
+    );
+    
+    if (monthIndex >= 0) {
+      const month = updatedMonths[monthIndex];
+      month.incomes = month.incomes.filter(t => t.id !== id);
+      month.expenses = month.expenses.filter(t => t.id !== id);
+      
+      updateAndSave(updatedMonths);
+      
+      if (currentMonth.name === month.name) {
+        setCurrentMonth({ ...month });
+      }
+    }
   };
 
   const handleEditClick = (transaction) => {
@@ -88,20 +143,10 @@ const Dashboard = () => {
 
   const handleMonthChange = (monthName) => {
     const month = allMonths.find(m => m.name === monthName);
-    if (month) {
-      setCurrentMonth(month);
-    }
+    if (month) setCurrentMonth(month);
   };
 
-  // تجميع المصروفات حسب الفئة
-  const categoryExpenses = expenses.reduce((acc, expense) => {
-    const category = expense.category;
-    if (!acc[category]) {
-      acc[category] = 0;
-    }
-    acc[category] += expense.amount;
-    return acc;
-  }, {});
+  if (!currentMonth) return <div>Loading...</div>;
 
   return (
     <div className="dashboard-container">
@@ -109,7 +154,7 @@ const Dashboard = () => {
       
       <main className="dashboard-main">
         <div className="page-title">
-          <h2>التدفق النقدي لشهر {currentMonth.name}</h2>
+          <h2>Cash Flow for {currentMonth.name}</h2>
           <div className="controls">
             <MonthFilter 
               months={allMonths.map(m => m.name)} 
@@ -117,38 +162,38 @@ const Dashboard = () => {
               onMonthChange={handleMonthChange}
             />
             <button 
-              className="btn btn-success" 
+              className="btn btn-primary" 
               onClick={() => {
                 setEditingTransaction(null);
                 setShowForm(true);
               }}
             >
-              <i className="fas fa-plus"></i> إضافة معاملة جديدة
+              <i className="fas fa-plus"></i> Add Transaction
             </button>
           </div>
         </div>
         
         <div className="stats-grid">
           <StatsCard 
-            title="إجمالي الإيرادات" 
+            title="Total Income" 
             value={`EGP ${totalIncome.toLocaleString('en-US')}`} 
             icon="💰" 
             color="#4CAF50" 
           />
           <StatsCard 
-            title="إجمالي المصروفات" 
+            title="Total Expenses" 
             value={`EGP ${totalExpense.toLocaleString('en-US')}`} 
             icon="💸" 
             color="#F44336" 
           />
           <StatsCard 
-            title="الرصيد الشهري" 
+            title="Monthly Balance" 
             value={`EGP ${monthlyBalance.toLocaleString('en-US')}`} 
             icon="⚖️" 
             color="#2196F3" 
           />
           <StatsCard 
-            title="الرصيد النقدي" 
+            title="Cash Balance" 
             value={`EGP ${cashBalance.toLocaleString('en-US')}`} 
             icon="💳" 
             color="#FFC107" 
@@ -157,7 +202,7 @@ const Dashboard = () => {
         
         <div className="content-grid">
           <div className="chart-container">
-            <h3>توزيع المصروفات حسب الفئة</h3>
+            <h3>Expense Distribution</h3>
             <ExpenseChart expenses={expenses} />
           </div>
           
@@ -168,12 +213,19 @@ const Dashboard = () => {
         </div>
         
         <div className="table-section">
-          <h3>سجل المعاملات</h3>
-          <TransactionTable 
-            transactions={transactions} 
-            onEdit={handleEditClick} 
-            onDelete={handleDeleteTransaction} 
-          />
+          <h3>Transaction History</h3>
+          {transactions.length > 0 ? (
+            <TransactionTable 
+              transactions={transactions} 
+              onEdit={handleEditClick} 
+              onDelete={handleDeleteTransaction} 
+            />
+          ) : (
+            <div className="empty-state">
+              <i className="fas fa-file-invoice-dollar"></i>
+              <p>No transactions found</p>
+            </div>
+          )}
         </div>
       </main>
       

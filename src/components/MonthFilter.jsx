@@ -1,4 +1,3 @@
-// src/components/MonthFilter.jsx
 import React from 'react';
 
 const MonthFilter = ({ months, currentMonth, onMonthChange }) => {
