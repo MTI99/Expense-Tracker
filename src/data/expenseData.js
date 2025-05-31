@@ -16,7 +16,7 @@ const defaultData = {
         netBalance: 3110,
         currency: "EGP"
       },
-      income: [
+      incomes: [
         { id: 1, date: "2024-12-01", description: "جزء من مرتب شهر 11", amount: 1400, category: "Work" },
         { id: 2, date: "2024-12-02", description: "جهاز السيريس اس", amount: 13400, category: "Other" },
         { id: 3, date: "2024-12-03", description: "باقي المرتب", amount: 2350, category: "Work" },
@@ -50,18 +50,18 @@ const defaultData = {
         { id: 29, date: "2024-12-29", description: "بنزين", amount: 50, category: "Personal" },
         { id: 30, date: "2024-12-30", description: "اكل ومصاريف جانبية", amount: 150, category: "Personal" },
         { id: 31, date: "2024-12-31", description: "دراعات اكس بوكس", amount: 6100, category: "Invest" },
-        { id: 32, date: "2024-12-31", description: "مصطفي", amount: 500, category: "Personal" }, // Day capped
-        { id: 33, date: "2024-12-31", description: "كورة", amount: 20, category: "Personal" }, // Day capped
-        { id: 34, date: "2024-12-31", description: "علاج", amount: 135, category: "Home" }, // Day capped
-        { id: 35, date: "2024-12-31", description: "مصروف غير محدد (كان علامة ؟)", amount: 255, category: "Personal" }, // Day capped
-        { id: 36, date: "2024-12-31", description: "بنزين", amount: 150, category: "Personal" }, // Day capped
-        { id: 37, date: "2024-12-31", description: "اكل ومصاريف جانبية", amount: 200, category: "Personal" }, // Day capped
-        { id: 38, date: "2024-12-31", description: "شحن نت", amount: 340, category: "Home" }, // Day capped
-        { id: 39, date: "2024-12-31", description: "بن", amount: 25, category: "Personal" }, // Day capped
-        { id: 40, date: "2024-12-31", description: "منظفات وبن ولزق", amount: 100, category: "Work" }, // Day capped
-        { id: 41, date: "2024-12-31", description: "قبض مصطفي", amount: 500, category: "Work" }, // Day capped
-        { id: 42, date: "2024-12-31", description: "العمارة شهر 12", amount: 180, category: "Work" }, // Day capped
-        { id: 43, date: "2024-12-31", description: "غاز وكهربا", amount: 60, category: "Work" } // Day capped
+        { id: 32, date: "2024-12-31", description: "مصطفي", amount: 500, category: "Personal" },
+        { id: 33, date: "2024-12-31", description: "كورة", amount: 20, category: "Personal" },
+        { id: 34, date: "2024-12-31", description: "علاج", amount: 135, category: "Home" },
+        { id: 35, date: "2024-12-31", description: "مصروف غير محدد (كان علامة ؟)", amount: 255, category: "Personal" },
+        { id: 36, date: "2024-12-31", description: "بنزين", amount: 150, category: "Personal" },
+        { id: 37, date: "2024-12-31", description: "اكل ومصاريف جانبية", amount: 200, category: "Personal" },
+        { id: 38, date: "2024-12-31", description: "شحن نت", amount: 340, category: "Home" },
+        { id: 39, date: "2024-12-31", description: "بن", amount: 25, category: "Personal" },
+        { id: 40, date: "2024-12-31", description: "منظفات وبن ولزق", amount: 100, category: "Work" },
+        { id: 41, date: "2024-12-31", description: "قبض مصطفي", amount: 500, category: "Work" },
+        { id: 42, date: "2024-12-31", description: "العمارة شهر 12", amount: 180, category: "Work" },
+        { id: 43, date: "2024-12-31", description: "غاز وكهربا", amount: 60, category: "Work" }
       ]
     },
     {
@@ -72,7 +72,7 @@ const defaultData = {
         netBalance: 10,
         currency: "EGP"
       },
-      income: [
+      incomes: [
         { id: 44, date: "2025-01-01", description: "مرتب شهر 12", amount: 5500, category: "Work" },
         { id: 45, date: "2025-01-02", description: "فائض شهر 12", amount: 2200, category: "Other" },
         { id: 46, date: "2025-01-03", description: "بيع دراع ون اس", amount: 1500, category: "Other" },
@@ -114,7 +114,7 @@ const defaultData = {
         netBalance: 2560,
         currency: "EGP"
       },
-      income: [
+      incomes: [
         { id: 73, date: "2025-02-01", description: "مرتب شهر يناير", amount: 8000, category: "Work" },
         { id: 74, date: "2025-02-02", description: "دراع ون اس", amount: 1400, category: "Other" }
       ],
@@ -151,7 +151,7 @@ const defaultData = {
         netBalance: 2995,
         currency: "EGP"
       },
-      income: [
+      incomes: [
         { id: 97, date: "2025-03-01", description: "مرتب شهر فبراير", amount: 6000, category: "Work" },
         { id: 98, date: "2025-03-02", description: "مكافات شهر فبراير", amount: 2000, category: "Work" },
         { id: 99, date: "2025-03-03", description: "عمرو جيم ستور", amount: 375, category: "Other" },
@@ -185,13 +185,13 @@ const defaultData = {
         { id: 125, date: "2025-03-29", description: "ماما", amount: 200, category: "Home" },
         { id: 126, date: "2025-03-30", description: "علاج شخصي", amount: 250, category: "Personal" },
         { id: 127, date: "2025-03-31", description: "اكل وسحور", amount: 150, category: "Home" },
-        { id: 128, date: "2025-03-31", description: "كارت الكهربا", amount: 100, category: "Home" }, // Day capped
-        { id: 129, date: "2025-03-31", description: "احمد", amount: 100, category: "Home" }, // Day capped
-        { id: 130, date: "2025-03-31", description: "؟ (غير محدد)", amount: 330, category: "Personal" }, // Day capped
-        { id: 131, date: "2025-03-31", description: "شحن اكونت بوسطة", amount: 250, category: "Work" }, // Day capped
-        { id: 132, date: "2025-03-31", description: "مصاريف موتسيكل نور وفرامل", amount: 775, category: "Personal" }, // Day capped
-        { id: 133, date: "2025-03-31", description: "بنزين", amount: 50, category: "Personal" }, // Day capped
-        { id: 134, date: "2025-03-31", description: "قهوة وبيض", amount: 50, category: "Personal" } // Day capped
+        { id: 128, date: "2025-03-31", description: "كارت الكهربا", amount: 100, category: "Home" },
+        { id: 129, date: "2025-03-31", description: "احمد", amount: 100, category: "Home" },
+        { id: 130, date: "2025-03-31", description: "؟ (غير محدد)", amount: 330, category: "Personal" },
+        { id: 131, date: "2025-03-31", description: "شحن اكونت بوسطة", amount: 250, category: "Work" },
+        { id: 132, date: "2025-03-31", description: "مصاريف موتسيكل نور وفرامل", amount: 775, category: "Personal" },
+        { id: 133, date: "2025-03-31", description: "بنزين", amount: 50, category: "Personal" },
+        { id: 134, date: "2025-03-31", description: "قهوة وبيض", amount: 50, category: "Personal" }
       ]
     },
     {
@@ -202,7 +202,7 @@ const defaultData = {
         netBalance: 0,
         currency: "EGP"
       },
-      income: [
+      incomes: [
         { id: 135, date: "2025-04-01", description: "فائض شهر مارس قبل العيد", amount: 2995, category: "Other" },
         { id: 136, date: "2025-04-02", description: "مرتب شهر مارس", amount: 6000, category: "Work" },
         { id: 137, date: "2025-04-03", description: "دراعين اكس بوكس", amount: 2500, category: "Other" },
@@ -235,14 +235,14 @@ const defaultData = {
         { id: 162, date: "2025-04-28", description: "لحام الموتسيكل", amount: 50, category: "Personal" },
         { id: 163, date: "2025-04-29", description: "؟ (مصروف كبير غير محدد)", amount: 900, category: "Personal" },
         { id: 164, date: "2025-04-30", description: "؟ (غير محدد)", amount: 190, category: "Personal" },
-        { id: 165, date: "2025-04-30", description: "إدخار في الفيزا الاحتياطية", amount: 2000, category: "Invest" }, // Day capped
-        { id: 166, date: "2025-04-30", description: "علاج", amount: 250, category: "Home" }, // Day capped
-        { id: 167, date: "2025-04-30", description: "نثريات شخصية", amount: 35, category: "Home" }, // Day capped
-        { id: 168, date: "2025-04-30", description: "شحن", amount: 200, category: "Personal" }, // Day capped
-        { id: 169, date: "2025-04-30", description: "شحن كهربا", amount: 100, category: "Home" }, // Day capped
-        { id: 170, date: "2025-04-30", description: "بنزين", amount: 100, category: "Personal" }, // Day capped
-        { id: 171, date: "2025-04-30", description: "مصاريف للبيت", amount: 200, category: "Home" }, // Day capped
-        { id: 172, date: "2025-04-30", description: "مصاريف شخصية", amount: 745, category: "Personal" } // Day capped
+        { id: 165, date: "2025-04-30", description: "إدخار في الفيزا الاحتياطية", amount: 2000, category: "Invest" },
+        { id: 166, date: "2025-04-30", description: "علاج", amount: 250, category: "Home" },
+        { id: 167, date: "2025-04-30", description: "نثريات شخصية", amount: 35, category: "Home" },
+        { id: 168, date: "2025-04-30", description: "شحن", amount: 200, category: "Personal" },
+        { id: 169, date: "2025-04-30", description: "شحن كهربا", amount: 100, category: "Home" },
+        { id: 170, date: "2025-04-30", description: "بنزين", amount: 100, category: "Personal" },
+        { id: 171, date: "2025-04-30", description: "مصاريف للبيت", amount: 200, category: "Home" },
+        { id: 172, date: "2025-04-30", description: "مصاريف شخصية", amount: 745, category: "Personal" }
       ]
     },
     {
@@ -253,7 +253,7 @@ const defaultData = {
         netBalance: 0,
         currency: "EGP"
       },
-      income: [
+      incomes: [
         { id: 173, date: "2025-05-01", description: "مرتب شهر ابريل", amount: 10000, category: "Work" },
         { id: 174, date: "2025-05-02", description: "فائض شهر مارس", amount: 1000, category: "Other" },
         { id: 175, date: "2025-05-03", description: "بيع جهازون اس", amount: 325, category: "Other" },
@@ -265,7 +265,7 @@ const defaultData = {
         { id: 179, date: "2025-05-07", description: "نت", amount: 350, category: "Home" },
         { id: 180, date: "2025-05-08", description: "احمد", amount: 1000, category: "Home" },
         { id: 181, date: "2025-05-09", description: "ملابس (كورفا)", amount: 350, category: "Personal" },
-        { id: 182, date: "2025-05-10", description: "علاج", amount: 200, category: "Home" },
+        { id: 182, date: "2025-05-10",description: "علاج", amount: 200, category: "Home" },
         { id: 183, date: "2025-05-11", description: "نوتة", amount: 160, category: "Personal" },
         { id: 184, date: "2025-05-12", description: "نثريات", amount: 175, category: "Personal" },
         { id: 185, date: "2025-05-13", description: "تصليح مروحة", amount: 50, category: "Personal" },
